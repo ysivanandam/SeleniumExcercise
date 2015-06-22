@@ -49,12 +49,12 @@ public class HomeScreen extends PageObject {
 		if(objList != null) {
 			if(objList.size() == 1) {
 				Utilities.scrollToObject(driver.getDriver(), objList.get(0));
-//				try {
+				try {
 					WebDriverWait wait = new WebDriverWait(driver.getDriver(), 10);
 					wait.until(ExpectedConditions.elementToBeClickable(elements.get(ObjectNotation.TEXT_PREFIX + "Search")));
-//				}catch(Exception e) {
-//					logger.fatal(e.getMessage());
-//				}
+				}catch(Exception e) {
+					logger.fatal(e.getMessage());
+				}
 				objList.get(0).sendKeys(searchString);
 				objList.get(0).submit();
 				logger.info("Entered \"" + searchString + "\" in \"Search\" TextBox");

@@ -43,10 +43,10 @@ public class TransactionResultPage extends PageObject {
 		logger.info("Total Transaction Rows: " + tBodyRows.size());
 		
 		for(WebElement trObj : tBodyRows) {
-			boolean trStatus = true;
+			verifyStatus = true;
 			hItr = verifyResults.keySet().iterator();
 			List<WebElement> tdObjs = trObj.findElements(By.xpath("./td"));
-			while(hItr.hasNext() && trStatus) {
+			while(hItr.hasNext() && verifyStatus) {
 				String colNameToVerify = hItr.next(); 
 				System.out.println("colNameToVerify: " + colNameToVerify);
 				if(tblHeader.containsKey(colNameToVerify)) {
@@ -60,17 +60,16 @@ public class TransactionResultPage extends PageObject {
 							logger.info("Valid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " = " + tdObjs.get(colIndexToVerify).getText());
 						}else{
 							logger.info("Invalid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " != " + tdObjs.get(colIndexToVerify).getText());
-							trStatus = false;							
+							verifyStatus = false;							
 						}						
 					}else {						
 						logger.fatal("Invalid Column Index/Position : " + colNameToVerify);
-						trStatus = false;
+						verifyStatus = false;
 					}
 				}else {					
 					logger.fatal("Invalid Column Name: " + colNameToVerify);
-					trStatus = false;
-				}
-				
+					verifyStatus = false;
+				}				
 			}
 		}
 		return verifyStatus;

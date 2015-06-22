@@ -102,7 +102,7 @@ public class PlaceOrder {
 															LinkedHashMap<String, String> expectedTransLog = new LinkedHashMap<String, String>();
 															expectedTransLog.put("Name", "Apple iPhone 4S 16GB SIM-Free – Black");
 															expectedTransLog.put("Price", "$270.00");
-															expectedTransLog.put("Quantity", "1");
+															expectedTransLog.put("Quantity", "2");
 															expectedTransLog.put("Item Total", "$270.00");
 															validToContinue = transactionResultPage.verifyTransactionSummary(expectedTransLog);
 															if(validToContinue) {
