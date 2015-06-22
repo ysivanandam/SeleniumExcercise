@@ -22,7 +22,8 @@ public class HomeScreen extends PageObject {
 		super(driver);	
 		element(ObjectNotation.LINK_PREFIX + "Home", By.linkText("Home"));
 		element(ObjectNotation.TEXT_PREFIX + "Search", By.xpath("//input[@type='text' and @name='s' and @value='Search Products']"));
-		element(ObjectNotation.LINK_PREFIX + "ManageAccount", By.xpath("//a[@title='My Account' and @class='account_icon']"));
+		element(ObjectNotation.LINK_PREFIX + "ManageAccount", By.xpath("//a[@title='My Account' and contains(@href,'products-page') and contains(@href,'your-account')]"));
+		element(ObjectNotation.LINK_PREFIX + "YourDetails", By.linkText("Your Details"));
 		element(ObjectNotation.LINK_PREFIX + "Logout", By.linkText("Log out"));
 	}
 	
@@ -54,7 +55,7 @@ public class HomeScreen extends PageObject {
 				Utilities.scrollToObject(driver.getDriver(), objList.get(0));
 				try {
 					WebDriverWait wait = new WebDriverWait(driver.getDriver(), 10);
-					wait.until(ExpectedConditions.elementToBeClickable((By)elements.get(ObjectNotation.TEXT_PREFIX + "Search")));
+					wait.until(ExpectedConditions.elementToBeClickable(elements.get((ObjectNotation.TEXT_PREFIX + "Search").toLowerCase())));
 				}catch(Exception e) {
 					logger.fatal(e.getMessage());
 				}
@@ -75,7 +76,8 @@ public class HomeScreen extends PageObject {
 	}
 	
 	public void logoutFromApp() {
-		driver.get("http://store.demoqa.com/products-page/your-account/");
+//		driver.get("http://store.demoqa.com/products-page/your-account/");
+		element(ObjectNotation.LINK_PREFIX + "ManageAccount").get(0).click();
 		List<WebElement> logoutObjs = element(ObjectNotation.LINK_PREFIX + "Logout");
 		if(logoutObjs.size() > 0) {
 			element(ObjectNotation.LINK_PREFIX + "Logout").get(0).click();
@@ -94,6 +96,33 @@ public class HomeScreen extends PageObject {
 		}else {
 			logger.error("Expected PageTitle: " + pageTitle + " | Actual PageTitle: " + currentPageTitle);
 			returnStatus = false;
+		}
+		return returnStatus;
+	}
+	
+	public boolean gotoManageAccountPage() {
+		boolean returnStatus = true;
+		try {
+			Thread.sleep(2000);
+		}catch(Exception e) {
+			logger.fatal(e.getMessage());
+		}
+		List<WebElement> linkObjs = element(ObjectNotation.LINK_PREFIX + "ManageAccount");
+		if(linkObjs.size() == 0) {
+			logger.error("ManageAccount link not found");
+		}else {
+			linkObjs.get(0).click();
+		}
+		return returnStatus;
+	}
+	
+	public boolean gotoYourDetails() {
+		boolean returnStatus = true;
+		List<WebElement> linkObjs = element(ObjectNotation.LINK_PREFIX + "YourDetails");
+		if(linkObjs.size() == 0) {
+			logger.error("ManageAccount link not found");
+		}else {
+			linkObjs.get(0).click();
 		}
 		return returnStatus;
 	}
