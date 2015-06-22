@@ -75,29 +75,7 @@ public class HomeScreen extends PageObject {
 	}
 	
 	public void logoutFromApp() {
-//		logger.info("1");
-//		List<WebElement> manageAccount = element(ObjectNotation.LINK_PREFIX + "ManageAccount");
-//		logger.info("2");		
-//		Utilities.scrollToObject(driver.getDriver(), manageAccount.get(0));
-//		logger.info("3");
-//		WebDriverWait wait = new WebDriverWait(driver, 10);
-//		try {
-//			wait.until(ExpectedConditions.elementToBeClickable(elements.get(ObjectNotation.LINK_PREFIX + "ManageAccount")));
-//		}catch(Exception e) {
-//			logger.fatal(e.getMessage());
-//			e.printStackTrace();
-//		}	
-//		
-//		logger.info("4");
-//		manageAccount.get(0).click();
-//		logger.info("5");
 		driver.get("http://store.demoqa.com/products-page/your-account/");
-//		try {
-//			WebDriverWait wait = new WebDriverWait(driver, 10);
-//			wait.until(ExpectedConditions.elementToBeClickable(elements.get(ObjectNotation.LINK_PREFIX + "Logout")));
-//		}catch(Exception e) {
-//			logger.fatal(e.getMessage());
-//		}
 		List<WebElement> logoutObjs = element(ObjectNotation.LINK_PREFIX + "Logout");
 		if(logoutObjs.size() > 0) {
 			element(ObjectNotation.LINK_PREFIX + "Logout").get(0).click();
