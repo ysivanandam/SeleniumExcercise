@@ -41,25 +41,22 @@ public class TransactionResultPage extends PageObject {
 		Iterator<String> hItr = null;
 		List<WebElement> tBodyRows = element(ObjectNotation.TABLE_PREFIX + "TransactionLog").get(0).findElements(By.xpath("./tbody/tr"));
 		logger.info("Total Transaction Rows: " + tBodyRows.size());
-		
+		int logInd = 1;
 		for(WebElement trObj : tBodyRows) {
 			verifyStatus = true;
 			hItr = verifyResults.keySet().iterator();
 			List<WebElement> tdObjs = trObj.findElements(By.xpath("./td"));
 			while(hItr.hasNext() && verifyStatus) {
 				String colNameToVerify = hItr.next(); 
-				System.out.println("colNameToVerify: " + colNameToVerify);
 				if(tblHeader.containsKey(colNameToVerify)) {
 					int colIndexToVerify = Integer.parseInt(tblHeader.get(colNameToVerify));
-					System.out.println("colIndexToVerify: " + colIndexToVerify);
-					System.out.println(tdObjs.size());
 					if(tdObjs.size() > 0 && colIndexToVerify <= tdObjs.size()) {
 						String expColValue = verifyResults.get(colNameToVerify).trim().replaceAll("\\$", "").replaceAll("", "");
 						String actColValue = tdObjs.get(colIndexToVerify).getText().trim().replaceAll("\\$", "").replaceAll("", "");
 						if(expColValue.equalsIgnoreCase(actColValue)) {
-							logger.info("Valid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " = " + tdObjs.get(colIndexToVerify).getText());
+							logger.info("Row " + logInd + ": Valid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " = " + tdObjs.get(colIndexToVerify).getText());
 						}else{
-							logger.info("Invalid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " != " + tdObjs.get(colIndexToVerify).getText());
+							logger.info("Row " + logInd + ": Invalid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " != " + tdObjs.get(colIndexToVerify).getText());
 							verifyStatus = false;							
 						}						
 					}else {						
