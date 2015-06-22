@@ -35,7 +35,7 @@ public class WrappedWebDriver implements WebDriver{
 			System.setProperty("webdriver.chrome.driver", browserDriver.getAbsolutePath());
 			driver = new ChromeDriver();
 		}else {
-			throw new InvalidBrowserTypeException("Invalid browser: " + webBrowser + ". Please specify a valid browser (id|firefox|chrome)");
+			throw new InvalidBrowserTypeException("Invalid browser: " + webBrowser + ". Please specify a valid browser (ie|firefox|chrome)");
 		}
 	}
 	
