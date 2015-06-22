@@ -7,9 +7,10 @@ import com.siva.excercise.testscript.ju.test.*;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	PlaceOrder.class
+	
+	JSONTest.class
 })
 
 public class ExcerciseSuite {
-
+//PlaceOrder.class,
 }

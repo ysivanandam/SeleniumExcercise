@@ -14,7 +14,7 @@ public class INI {
 	public static final String VAR_CONFIGERRORMESSAGE = "##ERROR_WHEN_GETTING_PROPERTY_VALUE##";
 	
 	static Ini ini = null;
-	File iniFile = null;
+	static File iniFile = null;
 	
 	public INI(String filePath) {			
 		iniFile = new File(filePath);
@@ -38,19 +38,19 @@ public class INI {
 		}
 	}
 	
-	public void createSection(String sectionName) {
+	public static void createSection(String sectionName) {
 		if(!ini.containsKey(sectionName)) {
 			ini.add(sectionName);
 		}
 	}
 	
-	public void storeProperty(String sectionName, String keyName, String keyValue) {
+	public static void storeProperty(String sectionName, String keyName, String keyValue) {
 		createSection(sectionName);
 		Ini.Section section = ini.get(sectionName);
 		section.put(keyName, keyValue);
 	}
 	
-	public void storeIniFile() {
+	public static void storeIniFile() {
 		
 		try {
 			File tmpFile = new File(iniFile.getCanonicalPath());
