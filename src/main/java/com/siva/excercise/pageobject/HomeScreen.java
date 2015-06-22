@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.siva.excercise.automation.model.PageObject;
 import com.siva.excercise.wrapper.WrappedWebDriver;
+import com.siva.excercise.util.Utilities;
 import com.siva.excercise.variables.*;
 
 public class HomeScreen extends PageObject {
@@ -43,15 +44,17 @@ public class HomeScreen extends PageObject {
 	
 	public boolean searchProduct(String searchString) {
 		boolean methodStatus = true;
-		try {
-			WebDriverWait wait = new WebDriverWait(driver, 10);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(elements.get(ObjectNotation.TEXT_PREFIX + "Search")));
-		}catch(Exception e) {
-			logger.fatal(e.getMessage());
-		}
+		
 		List<WebElement> objList = element(ObjectNotation.TEXT_PREFIX + "Search");
 		if(objList != null) {
 			if(objList.size() == 1) {
+				Utilities.scrollToObject(driver.getDriver(), objList.get(0));
+//				try {
+					WebDriverWait wait = new WebDriverWait(driver.getDriver(), 10);
+					wait.until(ExpectedConditions.elementToBeClickable(elements.get(ObjectNotation.TEXT_PREFIX + "Search")));
+//				}catch(Exception e) {
+//					logger.fatal(e.getMessage());
+//				}
 				objList.get(0).sendKeys(searchString);
 				objList.get(0).submit();
 				logger.info("Entered \"" + searchString + "\" in \"Search\" TextBox");
@@ -85,9 +88,19 @@ public class HomeScreen extends PageObject {
 //		manageAccount.get(0).click();
 //		logger.info("5");
 		driver.get("http://store.demoqa.com/products-page/your-account/");
-		
-		element(ObjectNotation.LINK_PREFIX + "Logout").get(0).click();
-		logger.info("Logged off successfully");
+//		try {
+//			WebDriverWait wait = new WebDriverWait(driver, 10);
+//			wait.until(ExpectedConditions.elementToBeClickable(elements.get(ObjectNotation.LINK_PREFIX + "Logout")));
+//		}catch(Exception e) {
+//			logger.fatal(e.getMessage());
+//		}
+		List<WebElement> logoutObjs = element(ObjectNotation.LINK_PREFIX + "Logout");
+		if(logoutObjs.size() > 0) {
+			element(ObjectNotation.LINK_PREFIX + "Logout").get(0).click();
+			logger.info("Logged off successfully");
+		}else{
+			logger.info("No Logout link found");
+		}
 	}
 
 }

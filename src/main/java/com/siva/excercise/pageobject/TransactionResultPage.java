@@ -1,5 +1,7 @@
 package com.siva.excercise.pageobject;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -10,9 +12,10 @@ import org.openqa.selenium.WebElement;
 import com.siva.excercise.automation.model.PageObject;
 import com.siva.excercise.variables.ObjectNotation;
 import com.siva.excercise.wrapper.WrappedWebDriver;
+import com.siva.excercise.util.Utilities;
 
 public class TransactionResultPage extends PageObject {
-	LinkedHashMap<String, String> tblHeader = new LinkedHashMap<String, String>();
+	HashMap<String, String> tblHeader = new HashMap<String, String>();
 	Logger logger = Logger.getLogger(com.siva.excercise.pageobject.TransactionResultPage.class);
 	
 	public TransactionResultPage(WrappedWebDriver driver) {
@@ -22,12 +25,54 @@ public class TransactionResultPage extends PageObject {
 
 	public void getTableHeaders() {
 		int headerInd = 0;
-		List<WebElement> tBodyRows = element(ObjectNotation.TABLE_PREFIX + "TransactionLog").get(0).findElements(By.xpath("./thead/tr/th"));
-		logger.info("Total Items Purchased: " + tBodyRows.size());
-		for(WebElement thObj : tBodyRows) {
-			logger.info("Header " + (headerInd + 1) + " : " + thObj.getText());
-			tblHeader.put("header" + headerInd, thObj.getText());
+		List<WebElement> tHeaderRows = element(ObjectNotation.TABLE_PREFIX + "TransactionLog").get(0).findElements(By.xpath("./thead/tr/th"));
+		for(WebElement thObj : tHeaderRows) {
+			String colHeader = thObj.getText().trim();
+			if(!colHeader.equals("")) {
+				tblHeader.put(colHeader, Integer.toString(headerInd));
+			}
 			headerInd++;
 		}
+		logger.info("ColumnHeaderPostions: " + Utilities.returnHashMapAsString(tblHeader));
+	}
+	
+	public boolean verifyTransactionSummary(LinkedHashMap<String, String> verifyResults) {
+		boolean verifyStatus = true;
+		Iterator<String> hItr = null;
+		List<WebElement> tBodyRows = element(ObjectNotation.TABLE_PREFIX + "TransactionLog").get(0).findElements(By.xpath("./tbody/tr"));
+		logger.info("Total Transaction Rows: " + tBodyRows.size());
+		
+		for(WebElement trObj : tBodyRows) {
+			boolean trStatus = true;
+			hItr = verifyResults.keySet().iterator();
+			List<WebElement> tdObjs = trObj.findElements(By.xpath("./td"));
+			while(hItr.hasNext() && trStatus) {
+				String colNameToVerify = hItr.next(); 
+				System.out.println("colNameToVerify: " + colNameToVerify);
+				if(tblHeader.containsKey(colNameToVerify)) {
+					int colIndexToVerify = Integer.parseInt(tblHeader.get(colNameToVerify));
+					System.out.println("colIndexToVerify: " + colIndexToVerify);
+					System.out.println(tdObjs.size());
+					if(tdObjs.size() > 0 && colIndexToVerify <= tdObjs.size()) {
+						String expColValue = verifyResults.get(colNameToVerify).trim().replaceAll("\\$", "").replaceAll("", "");
+						String actColValue = tdObjs.get(colIndexToVerify).getText().trim().replaceAll("\\$", "").replaceAll("", "");
+						if(expColValue.equalsIgnoreCase(actColValue)) {
+							logger.info("Valid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " = " + tdObjs.get(colIndexToVerify).getText());
+						}else{
+							logger.info("Invalid Transaction Log for " + colNameToVerify + " : " + verifyResults.get(colNameToVerify) + " != " + tdObjs.get(colIndexToVerify).getText());
+							trStatus = false;							
+						}						
+					}else {						
+						logger.fatal("Invalid Column Index/Position : " + colNameToVerify);
+						trStatus = false;
+					}
+				}else {					
+					logger.fatal("Invalid Column Name: " + colNameToVerify);
+					trStatus = false;
+				}
+				
+			}
+		}
+		return verifyStatus;
 	}
 }

@@ -2,6 +2,8 @@ package com.siva.excercise.testscript.ju.test;
 
 import java.io.IOException;
 
+import java.util.LinkedHashMap;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,18 +25,19 @@ import com.siva.excercise.pageobject.TransactionResultPage;
 import com.siva.excercise.testscript.VerifyAndSubmitOrder;
 import com.siva.excercise.wrapper.WrappedWebDriver;
 import com.siva.excercise.util.Utilities;
+import com.siva.excercise.variables.GlobalValues;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PlaceOrder {
 	static Logger logger = Logger.getLogger(com.siva.excercise.testscript.ju.test.PlaceOrder.class);
 	static WrappedWebDriver wrappedDriver = null;
-	static com.siva.excercise.util.INI iniObj = null;
+	
 	private static boolean validToContinue = true;
 	
 	@BeforeClass
 	public static void initializeEnvironment() {
 		logger.info("Before Class");
-		iniObj = new com.siva.excercise.util.INI("Config.ini");
+		GlobalValues.iniObj = new com.siva.excercise.util.INI("Config.ini");
 		try {
 			wrappedDriver = new WrappedWebDriver();
 			wrappedDriver.manage().window().maximize();
@@ -53,7 +56,7 @@ public class PlaceOrder {
 	@Before
 	public void beforeEachTest() {
 		if(validToContinue) {
-//			logger.info("Before");			
+			wrappedDriver.get("http://store.demoqa.com");		
 		}
 	}
 	
@@ -93,8 +96,21 @@ public class PlaceOrder {
 														if(validToContinue) {
 															orderConfirmPage.submitOrder();
 															logger.info("Final Transaction Summary Page: " + Utilities.takeScreenShot(wrappedDriver));
+															
 															TransactionResultPage transactionResultPage = new TransactionResultPage(wrappedDriver);
 															transactionResultPage.getTableHeaders();
+															LinkedHashMap<String, String> expectedTransLog = new LinkedHashMap<String, String>();
+															expectedTransLog.put("Name", "Apple iPhone 4S 16GB SIM-Free – Black");
+															expectedTransLog.put("Price", "$270.00");
+															expectedTransLog.put("Quantity", "1");
+															expectedTransLog.put("Item Total", "$270.00");
+															validToContinue = transactionResultPage.verifyTransactionSummary(expectedTransLog);
+															if(validToContinue) {
+																logger.info("Verification Summary: " + Utilities.returnHashMapAsString(expectedTransLog));
+															}else {
+																logger.error("Verification Summary: " + Utilities.returnHashMapAsString(expectedTransLog));
+															}
+															
 														}
 													}
 											}
@@ -107,9 +123,7 @@ public class PlaceOrder {
 				}else {
 					logger.error("No Price set for the product");
 				}
-			}
-			
-			
+			}			
 		}
 	}
 	

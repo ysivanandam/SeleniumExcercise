@@ -10,8 +10,6 @@ public class VerifyAndSubmitOrder extends TestScript {
 	public VerifyAndSubmitOrder(WrappedWebDriver driver) {
 		super(driver);
 		homeScreenPage = new HomeScreen(driver);
-		driver.get("http://store.demoqa.com");
-		
 	}
 
 	public void searchOrderAndReview(String searchString) {

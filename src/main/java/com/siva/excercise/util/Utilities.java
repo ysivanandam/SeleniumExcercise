@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -44,5 +46,16 @@ public class Utilities {
 		actions.perform();
 		logger.info("Scrolled to object location: " + element.getLocation());
 	}	
+	
+	public static String returnHashMapAsString(HashMap<String, String> hMap) {
+		String returnString = "";
+		Iterator<String> hItr = hMap.keySet().iterator();
+		while(hItr.hasNext()) {
+			String hKey = hItr.next();
+			if(!returnString.equals("")) returnString += " | ";
+			returnString += hKey + " = " + hMap.get(hKey);
+		}
+		return returnString;
+	}
 	
 }
