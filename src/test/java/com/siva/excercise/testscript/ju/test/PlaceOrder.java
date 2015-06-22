@@ -55,6 +55,7 @@ public class PlaceOrder {
 	
 	@Before
 	public void beforeEachTest() {
+		logger.info("Start of Test");
 		if(validToContinue) {
 			wrappedDriver.get("http://store.demoqa.com");		
 		}
@@ -156,6 +157,8 @@ public class PlaceOrder {
 										if(checkOutPage.validatePageTitle())
 											if(checkOutPage.validateCheckOutDetails()) {
 												checkOutPage.removeAllProducts();
+												String msgToUser = checkOutPage.getMessage();
+												logger.info("Message after removing all products: " + msgToUser);
 											}										
 									}
 								}
@@ -174,6 +177,7 @@ public class PlaceOrder {
 		logger.info("After");
 		HomeScreen homeScreen = new HomeScreen(wrappedDriver);
 		homeScreen.logoutFromApp();
+		logger.info("End of Test");
 	}
 	
 	@AfterClass

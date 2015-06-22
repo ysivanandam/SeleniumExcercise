@@ -26,7 +26,7 @@ public class CheckOutPage extends PageObject {
 		try {			
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@id='checkout_page_container']/div[@class='slide1' and contains(@style, 'display: block')]")));
 		}catch(Exception e) {
-			logger.error("Incorrect CheckOut Page");
+			logger.info("No Items to Checkout");
 			return false;
 		}
 		return true;
@@ -158,6 +158,17 @@ public class CheckOutPage extends PageObject {
 			}
 		}
 		return returnTotal;
+	}
+	
+	public String getMessage() {
+		String returnMessage = "";
+		List<WebElement> msgObjs = element(ObjectNotation.DIV_PREFIX + "EntryContent");
+		if(msgObjs.size() > 0) {
+			returnMessage = msgObjs.get(0).getText();
+		}else {
+			logger.error("Message not found");
+		}
+		return returnMessage;
 	}
 
 	public boolean validatePageTitle() {

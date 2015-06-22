@@ -54,7 +54,7 @@ public class HomeScreen extends PageObject {
 				Utilities.scrollToObject(driver.getDriver(), objList.get(0));
 				try {
 					WebDriverWait wait = new WebDriverWait(driver.getDriver(), 10);
-					wait.until(ExpectedConditions.elementToBeClickable(elements.get(ObjectNotation.TEXT_PREFIX + "Search")));
+					wait.until(ExpectedConditions.elementToBeClickable((By)elements.get(ObjectNotation.TEXT_PREFIX + "Search")));
 				}catch(Exception e) {
 					logger.fatal(e.getMessage());
 				}
