@@ -12,9 +12,12 @@ public class VerifyAndSubmitOrder extends TestScript {
 		homeScreenPage = new HomeScreen(driver);
 	}
 
-	public void searchOrderAndReview(String searchString) {
-		homeScreenPage.clickHomeMenuLink();
-		homeScreenPage.searchProduct(searchString);
+	public boolean searchOrderAndReview(String searchString) {
+		boolean returnStatus = true;
+		returnStatus = homeScreenPage.clickHomeMenuLink();
+		if(returnStatus)
+			returnStatus = homeScreenPage.searchProduct(searchString);
+		return returnStatus;
 	}
 	
 }

@@ -19,7 +19,7 @@ public class FancyNotificationDialog extends PageObject {
 		element(ObjectNotation.SPAN_PREFIX + "FancyNotification", By.xpath("//div[@id='fancy_notification' and contains(@style, 'display: block')]/descendant::div[@id='fancy_notification_content' and contains(@style, 'display: block')]/span"));
 	}
 
-	public boolean goToCheckOutPage(String productName) {
+	public boolean goToCheckOutPage() {
 		boolean methodStatus = true;
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		try {

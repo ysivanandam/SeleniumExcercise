@@ -61,78 +61,113 @@ public class PlaceOrder {
 	}
 	
 	@Test
-	public void doTest_01_searchProduct() {	
+	public void doTest_01_submitProductOrder() {	
 		if(validToContinue) {
 			logger.info("Search Product");
 			VerifyAndSubmitOrder verifyAndSubmitOrder = null;
 			verifyAndSubmitOrder = new VerifyAndSubmitOrder(wrappedDriver);
-//			verifyAndSubmitOrder.searchOrderAndReview("iPhone 4s 16GB");
-			verifyAndSubmitOrder.searchOrderAndReview("4s");
-			
-			SearchResult searchResultPage = new SearchResult(wrappedDriver);
-			validToContinue = searchResultPage.clickOnProduct("Apple iPhone 4S 16GB SIM-Free – Black");
+			validToContinue = verifyAndSubmitOrder.searchOrderAndReview("4s");
 			if(validToContinue) {
-				ProductPage productPage = new ProductPage(wrappedDriver);
-				String productPrice = productPage.getProductPrice();
-				if(!productPrice.trim().equalsIgnoreCase("")) {
-					validToContinue = productPage.clickAddToCart();
+				SearchResult searchResultPage = new SearchResult(wrappedDriver);
+				if(searchResultPage.validatePageTitle()) {
+					validToContinue = searchResultPage.clickOnProduct("Apple iPhone 4S 16GB SIM-Free – Black");
 					if(validToContinue) {
-						FancyNotificationDialog fancyDialog = new FancyNotificationDialog(wrappedDriver);
-						validToContinue = fancyDialog.goToCheckOutPage("Apple iPhone 4S 16GB SIM-Free – Black");
-						
-						if(validToContinue) {
-							CheckOutPage checkOutPage = new CheckOutPage(wrappedDriver);
-							if(checkOutPage.validateCheckOutDetails()) {
-								if(checkOutPage.continueToPlaceOrder()) {
-									CheckOutConfirmationPage checkOutConfirmationPage = new CheckOutConfirmationPage(wrappedDriver);
-									if(checkOutConfirmationPage.enterUserName("abcdefg"))
-										if(checkOutConfirmationPage.enterUserPassword("cP6i8qfxMFx8"))
-											if(checkOutConfirmationPage.clickLoginButton()) {
-												OrderConfirmationPage orderConfirmPage = new OrderConfirmationPage(wrappedDriver);
-												if(orderConfirmPage.waitForFormToLoad())
-													if(orderConfirmPage.waitForBillingFormToLoad()) {
-														validToContinue = orderConfirmPage.reviewOrderSummary();
-														logger.info("Screenshot Captured " + Utilities.takeScreenShot(wrappedDriver));
-														if(validToContinue) {
-															orderConfirmPage.submitOrder();
-															logger.info("Final Transaction Summary Page: " + Utilities.takeScreenShot(wrappedDriver));
-															
-															TransactionResultPage transactionResultPage = new TransactionResultPage(wrappedDriver);
-															transactionResultPage.getTableHeaders();
-															LinkedHashMap<String, String> expectedTransLog = new LinkedHashMap<String, String>();
-															expectedTransLog.put("Name", "Apple iPhone 4S 16GB SIM-Free – Black");
-															expectedTransLog.put("Price", "$270.00");
-															expectedTransLog.put("Quantity", "2");
-															expectedTransLog.put("Item Total", "$270.00");
-															validToContinue = transactionResultPage.verifyTransactionSummary(expectedTransLog);
-															if(validToContinue) {
-																logger.info("Verification Summary: " + Utilities.returnHashMapAsString(expectedTransLog));
-															}else {
-																logger.error("Verification Summary: " + Utilities.returnHashMapAsString(expectedTransLog));
+						ProductPage productPage = new ProductPage(wrappedDriver);
+						if(productPage.validatePageTitle()) {
+							String productPrice = productPage.getProductPrice();
+							if(!productPrice.trim().equalsIgnoreCase("")) {
+								validToContinue = productPage.clickAddToCart();
+								if(validToContinue) {
+									FancyNotificationDialog fancyDialog = new FancyNotificationDialog(wrappedDriver);
+									validToContinue = fancyDialog.goToCheckOutPage();							
+									if(validToContinue) {
+										CheckOutPage checkOutPage = new CheckOutPage(wrappedDriver);
+										if(checkOutPage.validatePageTitle())
+											if(checkOutPage.validateCheckOutDetails()) {
+												if(checkOutPage.continueToPlaceOrder()) {
+													CheckOutConfirmationPage checkOutConfirmationPage = new CheckOutConfirmationPage(wrappedDriver);
+													if(checkOutConfirmationPage.enterUserName("abcdefg"))
+														if(checkOutConfirmationPage.enterUserPassword("cP6i8qfxMFx8"))
+															if(checkOutConfirmationPage.clickLoginButton()) {
+																OrderConfirmationPage orderConfirmPage = new OrderConfirmationPage(wrappedDriver);
+																if(orderConfirmPage.waitForFormToLoad())
+																	if(orderConfirmPage.waitForBillingFormToLoad()) {
+																		validToContinue = orderConfirmPage.reviewOrderSummary();
+																		logger.info("Screenshot Captured " + Utilities.takeScreenShot(wrappedDriver));
+																		if(validToContinue) {
+																			orderConfirmPage.submitOrder();
+																			logger.info("Final Transaction Summary Page: " + Utilities.takeScreenShot(wrappedDriver));
+																			
+																			TransactionResultPage transactionResultPage = new TransactionResultPage(wrappedDriver);
+																			if(transactionResultPage.validatePageTitle()) {
+																				transactionResultPage.getTableHeaders();
+																				LinkedHashMap<String, String> expectedTransLog = new LinkedHashMap<String, String>();
+																				expectedTransLog.put("Name", "Apple iPhone 4S 16GB SIM-Free – Black");
+																				expectedTransLog.put("Price", "$270.00");
+																				expectedTransLog.put("Quantity", "1");
+																				expectedTransLog.put("Item Total", "$270.00");
+																				validToContinue = transactionResultPage.verifyTransactionSummary(expectedTransLog);
+																				if(validToContinue) {
+																					logger.info("Verification Summary: " + Utilities.returnHashMapAsString(expectedTransLog));
+																				}else {
+																					logger.error("Verification Summary: " + Utilities.returnHashMapAsString(expectedTransLog));
+																				}
+																			}
+																			
+																		}
+																	}
 															}
-															
-														}
-													}
-											}
+												}
+											}										
+									}
 								}
+							}else {
+								logger.error("No Price set for the product");
 							}
-							
-							
 						}
 					}
-				}else {
-					logger.error("No Price set for the product");
 				}
-			}			
+			}
 		}
 	}
 	
-//	@Test
-//	public void doTest_02_verifySearchResult() {	
-//		if(validToContinue) {
-//			logger.info("Verify Search Result");
-//		}
-//	}
+	@Test
+	public void doTest_02_verifyOrderRemoval() {	
+		if(validToContinue) {
+			logger.info("Search Product");
+			VerifyAndSubmitOrder verifyAndSubmitOrder = null;
+			verifyAndSubmitOrder = new VerifyAndSubmitOrder(wrappedDriver);
+			validToContinue = verifyAndSubmitOrder.searchOrderAndReview("4s");
+			if(validToContinue) {
+				SearchResult searchResultPage = new SearchResult(wrappedDriver);
+				if(searchResultPage.validatePageTitle()) {
+					validToContinue = searchResultPage.clickOnProduct("Apple iPhone 4S 16GB SIM-Free – Black");
+					if(validToContinue) {
+						ProductPage productPage = new ProductPage(wrappedDriver);
+						if(productPage.validatePageTitle()) {
+							String productPrice = productPage.getProductPrice();
+							if(!productPrice.trim().equalsIgnoreCase("")) {
+								validToContinue = productPage.clickAddToCart();
+								if(validToContinue) {
+									FancyNotificationDialog fancyDialog = new FancyNotificationDialog(wrappedDriver);
+									validToContinue = fancyDialog.goToCheckOutPage();							
+									if(validToContinue) {
+										CheckOutPage checkOutPage = new CheckOutPage(wrappedDriver);
+										if(checkOutPage.validatePageTitle())
+											if(checkOutPage.validateCheckOutDetails()) {
+												checkOutPage.removeAllProducts();
+											}										
+									}
+								}
+							}else {
+								logger.error("No Price set for the product");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	
 	@After
 	public void afterEachTest() {		

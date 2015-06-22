@@ -17,7 +17,7 @@ import com.siva.excercise.util.Utilities;
 public class TransactionResultPage extends PageObject {
 	HashMap<String, String> tblHeader = new HashMap<String, String>();
 	Logger logger = Logger.getLogger(com.siva.excercise.pageobject.TransactionResultPage.class);
-	
+	String pageTitle = "Transaction Results | ONLINE STORE";
 	public TransactionResultPage(WrappedWebDriver driver) {
 		super(driver);
 		element(ObjectNotation.TABLE_PREFIX + "TransactionLog", By.xpath("//table[@class='wpsc-purchase-log-transaction-results']"));
@@ -70,5 +70,18 @@ public class TransactionResultPage extends PageObject {
 			}
 		}
 		return verifyStatus;
+	}
+	
+	public boolean validatePageTitle() {
+		boolean returnStatus = true;
+		String currentPageTitle = driver.getTitle();
+		returnStatus = currentPageTitle.equalsIgnoreCase(pageTitle);
+		if(returnStatus) {
+			logger.info("Valid Page with PageTitle: " + pageTitle);
+		}else {
+			logger.error("Expected PageTitle: " + pageTitle + " | Actual PageTitle: " + currentPageTitle);
+			returnStatus = false;
+		}
+		return returnStatus;
 	}
 }

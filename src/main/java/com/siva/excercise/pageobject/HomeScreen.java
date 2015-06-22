@@ -16,6 +16,8 @@ import com.siva.excercise.variables.*;
 public class HomeScreen extends PageObject {
 
 	Logger logger = Logger.getLogger(com.siva.excercise.pageobject.HomeScreen.class);
+	String pageTitle = "ONLINE STORE | Toolsqa Dummy Test site";
+	
 	public HomeScreen(WrappedWebDriver driver) {
 		super(driver);	
 		element(ObjectNotation.LINK_PREFIX + "Home", By.linkText("Home"));
@@ -31,6 +33,7 @@ public class HomeScreen extends PageObject {
 			if(objList.size() == 1) {
 				objList.get(0).click();
 				logger.info("Clicked on \"Home\" Menu Link");
+				methodStatus = validatePageTitle();
 			}else {
 				methodStatus = false;
 				logger.error("There are more than 1 instance of \"Home\" Menu Link");
@@ -58,6 +61,7 @@ public class HomeScreen extends PageObject {
 				objList.get(0).sendKeys(searchString);
 				objList.get(0).submit();
 				logger.info("Entered \"" + searchString + "\" in \"Search\" TextBox");
+				
 			}else {
 				methodStatus = false;
 				logger.error("There are more than 1 instance of \"Search\" TextBox");
@@ -101,6 +105,19 @@ public class HomeScreen extends PageObject {
 		}else{
 			logger.info("No Logout link found");
 		}
+	}
+	
+	public boolean validatePageTitle() {
+		boolean returnStatus = true;
+		String currentPageTitle = driver.getTitle();
+		returnStatus = currentPageTitle.equalsIgnoreCase(pageTitle);
+		if(returnStatus) {
+			logger.info("Valid Page with PageTitle: " + pageTitle);
+		}else {
+			logger.error("Expected PageTitle: " + pageTitle + " | Actual PageTitle: " + currentPageTitle);
+			returnStatus = false;
+		}
+		return returnStatus;
 	}
 
 }

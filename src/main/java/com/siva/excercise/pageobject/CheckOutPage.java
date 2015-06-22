@@ -14,11 +14,11 @@ import com.siva.excercise.wrapper.WrappedWebDriver;
 
 public class CheckOutPage extends PageObject {
 	Logger logger = Logger.getLogger(com.siva.excercise.pageobject.CheckOutPage.class);
-	
+	String pageTitle = "Checkout";
 	public CheckOutPage(WrappedWebDriver driver) {
 		super(driver);
 		element(ObjectNotation.DIV_PREFIX + "CheckOutContainer", By.id("checkout_page_container"));
-		
+		element(ObjectNotation.DIV_PREFIX + "EntryContent", By.xpath("//div[@class='entry-content']"));		
 	}
 	
 	private boolean waitForPageToLoad() {
@@ -120,19 +120,15 @@ public class CheckOutPage extends PageObject {
 		List<WebElement> checkOutContainer = element(ObjectNotation.DIV_PREFIX + "CheckOutContainer");
 		if(validateIfCheckOutContainerExists(checkOutContainer)) {	
 			List<WebElement> checkOutTRs = checkOutContainer.get(0).findElements(By.xpath("./descendant::table[@class='checkout_cart']/descendant::tr[@class!='header']"));
-			for(WebElement checkOutTR : checkOutTRs) {
-				try {
-					logger.info("Waiting for page to load");
-					Thread.sleep(3000);
-					
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			int totalRows = checkOutTRs.size();
+			for(int rowInd=totalRows-1; rowInd>=0; rowInd--) {
+				WebElement checkOutTR = checkOutTRs.get(rowInd);
+				List<WebElement> productRemoveButtons = checkOutTR.findElements(By.xpath("./descendant::td[contains(@class,'wpsc_product_remove')]/descendant::input[@type='submit' and @value='Remove']"));
+				if(productRemoveButtons.size() > 0) {
+					productRemoveButtons.get(0).click();
+					validatePageTitle();
 				}
-				WebElement productRemove = checkOutTR.findElement(By.xpath("./descendant::td[contains(@class,'wpsc_product_remove')]/descendant::input[@type='submit' and @value='Remove']"));
-				
-				productRemove.click();
-				
-			}
+			}		
 			
 		}
 		return methodStatus;
@@ -164,4 +160,17 @@ public class CheckOutPage extends PageObject {
 		return returnTotal;
 	}
 
+	public boolean validatePageTitle() {
+		boolean returnStatus = true;
+		waitForPageToLoad();
+		String currentPageTitle = driver.getTitle();
+		returnStatus = currentPageTitle.contains(pageTitle);
+		if(returnStatus) {
+			logger.info("Valid Page with PageTitle: " + pageTitle);
+		}else {
+			logger.error("Expected PageTitle: " + pageTitle + " | Actual PageTitle: " + currentPageTitle);
+			returnStatus = false;
+		}
+		return returnStatus;
+	}
 }

@@ -13,6 +13,7 @@ import com.siva.excercise.wrapper.WrappedWebDriver;
 public class ProductPage extends PageObject {
 
 	Logger logger = Logger.getLogger(com.siva.excercise.pageobject.ProductPage.class);
+	String pageTitle = " | ONLINE STORE";
 	
 	public ProductPage(WrappedWebDriver driver) {
 		super(driver);
@@ -54,6 +55,19 @@ public class ProductPage extends PageObject {
 			logger.info("Product Price: " + productPrice);
 		}
 		return productPrice;
+	}
+	
+	public boolean validatePageTitle() {
+		boolean returnStatus = true;
+		String currentPageTitle = driver.getTitle();
+		returnStatus = currentPageTitle.contains(pageTitle);
+		if(returnStatus) {
+			logger.info("Valid Page with PageTitle: " + pageTitle);
+		}else {
+			logger.error("Expected PageTitle: " + pageTitle + " | Actual PageTitle: " + currentPageTitle);
+			returnStatus = false;
+		}
+		return returnStatus;
 	}
 
 }

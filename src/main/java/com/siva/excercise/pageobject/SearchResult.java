@@ -12,6 +12,7 @@ import com.siva.excercise.wrapper.WrappedWebDriver;
 public class SearchResult extends PageObject {
 
 	Logger logger = Logger.getLogger(com.siva.excercise.pageobject.SearchResult.class);
+	String pageTitle = "Search Results";
 	
 	public SearchResult(WrappedWebDriver driver) {
 		super(driver);
@@ -33,7 +34,18 @@ public class SearchResult extends PageObject {
 		return methodStatus;
 	}
 	
-	
+	public boolean validatePageTitle() {
+		boolean returnStatus = true;
+		String currentPageTitle = driver.getTitle();
+		returnStatus = currentPageTitle.contains(pageTitle);
+		if(returnStatus) {
+			logger.info("Valid Page with PageTitle: " + pageTitle);
+		}else {
+			logger.error("Expected PageTitle: " + pageTitle + " | Actual PageTitle: " + currentPageTitle);
+			returnStatus = false;
+		}
+		return returnStatus;
+	}
 	
 
 }
